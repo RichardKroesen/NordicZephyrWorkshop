@@ -22,9 +22,9 @@ static void blink_led(struct k_work *work)
 	int ret;
 	ret = gpio_pin_toggle_dt(&led);
 	if (ret < 0) {
-		printk("Error: unable to toggle LED pin\n");
-		return 0;
+		return;
 	}
+
 	k_work_schedule(&blink_led_work, K_MSEC(CONFIG_BLINKY_TIME_ON));
 }
 
@@ -40,12 +40,8 @@ int main(void)
 		return 0;
 	}
 
-	while (1) {
-		ret = gpio_pin_toggle_dt(&led);
-		if (ret < 0) {
-			return 0;
-		}
-		k_msleep(CONFIG_BLINKY_TIME_ON);
-	}
+	k_work_init_delayable(&blink_led_work, blink_led);
+	k_work_schedule(&blink_led_work, K_NO_WAIT);
+
 	return 0;
 }

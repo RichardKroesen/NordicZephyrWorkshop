@@ -19,7 +19,7 @@
     board_leds {
         compatible = "gpio-leds";
         my_led_1: my_led_1 {
-            gpios = <&gpio0 18 (GPIO_ACTIVE_LOW)>;
+            gpios = <&gpio0 17 (GPIO_ACTIVE_LOW)>;
             label = "My LED 1 GREEN";
         };
     };
