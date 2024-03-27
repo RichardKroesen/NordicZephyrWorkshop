@@ -15,10 +15,22 @@
  */
 static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
+static struct k_work_delayable blink_led_work; // Work item for blinking the LED
+
+static void blink_led(struct k_work *work)
+{
+	int ret;
+	ret = gpio_pin_toggle_dt(&led);
+	if (ret < 0) {
+		printk("Error: unable to toggle LED pin\n");
+		return 0;
+	}
+	k_work_schedule(&blink_led_work, K_MSEC(CONFIG_BLINKY_TIME_ON));
+}
+
 int main(void)
 {
 	int ret;
-
 	if (!gpio_is_ready_dt(&led)) {
 		return 0;
 	}
